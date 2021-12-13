@@ -1,0 +1,30 @@
+version: '3.9'
+services:
+  broker:
+    image: eclipse-mosquitto
+    hostname: mosquitto-broker
+    container_name: mosquitto-broker
+    ports:
+      - "1883:1883"
+    networks:
+      - iotstack_nw
+  nodered:
+    restart: "no"
+    container_name: nodered
+    image: nodered/node-red:latest
+    ports:
+      - 1880:1880
+    depends_on:
+      - broker
+    networks:
+      - iotstack_nw
+
+networks:
+  iotstack_nw:
+# external: true
+    name: IOTstack_Net
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 10.77.60.0/24
